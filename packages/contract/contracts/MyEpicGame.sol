@@ -32,7 +32,7 @@ contract MyEpicGame is ERC721 {
     }
     BigBoss public bigBoss;
 
-    //OpenZeppelin　が提供する　tokenIdsを簡単に追跡しするライブラリを呼び出しています。
+    //OpenZeppelin　が提供する　tokenIdsを簡単に追跡するライブラリを呼び出しています。
     using Counters for Counters.Counter;
     //tokenIdsはNFTの一意な識別子で、0,1,2, .. Nのように付与されます。
     Counters.Counter private _tokenIds;
@@ -53,7 +53,7 @@ contract MyEpicGame is ERC721 {
 
 
     constructor(
-    //プレイヤーが新しくNFTキャラクターをMintする際に、キャラクターを初期化するために渡されるデータを設定しています。これらのデータはホロンとエンド（js　ファイル）から渡されます。
+    //プレイヤーが新しくNFTキャラクターをMintする際に、キャラクターを初期化するために渡されるデータを設定しています。これらのデータはフロントエンド（js　ファイル）から渡されます。
     string[] memory characterNames,
     string[] memory characterImageURIs,
     uint[] memory characterHp,

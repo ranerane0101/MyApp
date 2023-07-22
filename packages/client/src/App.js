@@ -8,10 +8,6 @@ import './App.css';
 //SelectCharacterに入っているファイルをインポートします。
 import SelectCharacter from './Components/SelectCharacter';
 
-// Constants
-const TWITTER_HANDLE = 'あなたのTwitterハンドル';
-const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
-
 const App = () => {
   //ユーザーのウォレットアドレスを格納するために使用する状態変数を定義
   const [currentAccount, setCurrentAccount] = useState(null);
@@ -43,7 +39,7 @@ const App = () => {
         //（複数持っている場合も加味、よってaccountsと変数を定義している）
         const accounts = await ethereum.request({ method: "eth_accounts" });
         //もしアカウンっとが一つでも存在したら、以下を実行
-        if(accounts.length !== 0) {
+        if (accounts.length !== 0) {
           //accountsという変数にユーザーの一つ目（＝JavaScriptでいう0番目）のアドレスを格納
           const account = accounts[0];
           console.log("Found an authorized account:", account);
@@ -59,37 +55,37 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
-    };
-    //レンダリングメソッド
-    const renderContent = () => {
-      //シナリオ１
-      //ユーザーがWEBアプリにログインしていない場合、WEBアプリ上に、"Connect Wallet to Get Started"ボタンを表示する
-      if (!currentAccount) {
-        return (
-          <div className="connect-wallet-container">
-            <img src="https://i.imgur.com/TXBQ4cC.png" alt="LUFFY" />
-            <button
-             className="cta-button connect-wallet-button"
-             onClick={connectWalletAction}
-             >
-              Connect Wallet to Get Started
-             </button>
-          </div>
-        );
-        //シナリオ２
-        //ユーザーはWEBアプリにログインしており、かつ　NFTキャラクターを持っていない場合、WEBアプリ上に、を表示する
+  };
+  //レンダリングメソッド
+  const renderContent = () => {
+    //シナリオ１
+    //ユーザーがWEBアプリにログインしていない場合、WEBアプリ上に、"Connect Wallet to Get Started"ボタンを表示する
+    if (!currentAccount) {
+      return (
+        <div className="connect-wallet-container">
+          <img src="https://i.imgur.com/TXBQ4cC.png" alt="LUFFY" />
+          <button
+            className="cta-button connect-wallet-button"
+            onClick={connectWalletAction}
+          >
+            Connect Wallet to Get Started
+          </button>
+        </div>
+      );
+      //シナリオ２
+      //ユーザーはWEBアプリにログインしており、かつ　NFTキャラクターを持っていない場合、WEBアプリ上に、を表示する
 
-      } else if (currentAccount && !characterNFT) {
-        return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
-        //シナリオ３
-        //ユーザーはWEBアプリにログインしており、かつ、NFTキャラを持っている場合、
-        //Arenaでボスと戦います
-      } else if (currentAccount && characterNFT) {
-        return <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />;
-      }
-    };
-   //connectWallet メソッドを実装します
-   const connectWalletAction = async () => {
+    } else if (currentAccount && !characterNFT) {
+      return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+      //シナリオ３
+      //ユーザーはWEBアプリにログインしており、かつ、NFTキャラを持っている場合、
+      //Arenaでボスと戦います
+    } else if (currentAccount && characterNFT) {
+      return <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />;
+    }
+  };
+  //connectWallet メソッドを実装します
+  const connectWalletAction = async () => {
     try {
       const { ethereum } = window;
       if (!ethereum) {
@@ -113,7 +109,7 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
-   };
+  };
 
   //ページがロードされたときに、useEffect()内の関数が呼び出されます
   useEffect(() => {
@@ -152,19 +148,10 @@ const App = () => {
     <div className="App">
       <div className="container">
         <div className="header-container">
-        <p className="header gradient-text">⚡️ METAVERSE GAME ⚡️</p>
-        <p className="sub-text">プレイヤーと協力してボスを倒そう✨</p>
-         {/* renderContent メソッドを呼び出します。 */}
-         {renderContent()}
-        </div>
-        <div className="footer-container">
-          <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
-          <a
-            className="footer-text"
-            href={TWITTER_LINK}
-            target="_blank"
-            rel="noreferrer"
-          >{`built with @${TWITTER_HANDLE}`}</a>
+          <p className="header gradient-text">⚡️ METAVERSE GAME ⚡️</p>
+          <p className="sub-text">プレイヤーと協力してボスを倒そう✨</p>
+          {/* renderContent メソッドを呼び出します。 */}
+          {renderContent()}
         </div>
       </div>
     </div>

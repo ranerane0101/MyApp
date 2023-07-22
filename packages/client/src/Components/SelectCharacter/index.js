@@ -110,7 +110,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
                     type="button"
                     className="character-mint-button"
                     onClick={mintCharacterNFTAction(index)}
-                    >{'Mint ${character.name}'}</button>
+                    >{` ${character.name}を選択`}</button>
             </div>
         ));
   return (

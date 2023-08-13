@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+//SPDX-License-Identifier: Unlicense
 pragma solidity 0.8.18;
 
 //NFT発行のコントラクト　ERC721.sol　をインポートします。
@@ -23,14 +23,18 @@ contract MyEpicGame is ERC721 {
         uint maxHp;
         uint attackDamage;
     }
-    struct BigBoss {
+    //飲み物の構造体
+    struct Beverage {
+        //新規追加
+        uint beverageIndex;
         string name;
         string imageURI;
         uint hp;
         uint maxHp;
         uint attackDamage;
     }
-    BigBoss public bigBoss;
+    //飲み物のデフォルトデータを保持するための配列　beveragesを作成します。それぞれの配列はBeverages型です
+    Beverage[] public beverages;
 
     //OpenZeppelin　が提供する　tokenIdsを簡単に追跡するライブラリを呼び出しています。
     using Counters for Counters.Counter;
@@ -53,29 +57,21 @@ contract MyEpicGame is ERC721 {
 
 
     constructor(
-    //プレイヤーが新しくNFTキャラクターをMintする際に、キャラクターを初期化するために渡されるデータを設定しています。これらのデータはフロントエンド（js　ファイル）から渡されます。
+
     string[] memory characterNames,
     string[] memory characterImageURIs,
     uint[] memory characterHp,
     uint[] memory characterAttackDmg,
-    //これらの新しい変数は、run.jsやdeploy.jsを介して渡されます。
-    string memory bossName,
-    string memory bossImageURI,
-    uint bossHp,
-    uint bossAttackDamage
+    string[] memory beverageNames,
+    string[] memory beverageImageURI,
+    uint[] memory beveragePrice,
+    uint[] memory beverageCost
     )
     //作成するNFTの名前とそのシンボルをERC721規格に渡しています。
     ERC721("Onepiece", "ONEPIECE")
     {
-        //ボスを初期化します。ボスの情報をグローバル状態変数"bigBoss"に保存します。
-        bigBoss = BigBoss({
-            name: bossName,
-            imageURI: bossImageURI,
-            hp: bossHp,
-            maxHp: bossHp,
-            attackDamage: bossAttackDamage
-        });
-        console.log("Done initializing boss %s w/ HP %s, img %s", bigBoss.name, bigBoss.hp, bigBoss.imageURI);
+        
+
         //ゲームで扱う全てのキャラクターをループ処理で呼び出し、それぞれのキャラクターに付与されるデフォルト値をコントラクトに保存します。
         for(uint i = 0; i < characterNames.length; i += 1){
             defaultCharacters.push(CharacterAttributes({
@@ -96,6 +92,25 @@ contract MyEpicGame is ERC721 {
 
        //次のNFTがMintされるときのカウンターをインクリメントします。
        _tokenIds.increment();
+
+
+       //ボスの情報の初期化
+       for(uint i = 0; i < beverageNames.length; i += 1){
+            beverages.push(Beverage({
+            beverageIndex: i,
+            name: beverageNames[i],
+            imageURI: beverageImageURI[i],
+            hp: beveragePrice[i],
+            maxHp: beveragePrice[i],
+            attackDamage: beverageCost[i]
+        }));
+        Beverage memory beverage = beverages[i];
+
+        //hardhatのconsole.log()では任意の順番で最大４つのパラメータを指定できます。
+        //使用できるパラメータの種類：uint, string, bool, address
+        console.log("Done initializing %s w/ HP %s, img %s", beverage.name, beverage.hp, beverage.imageURI);
+    
+       }
     }
 
     //ユーザーはmintCharacterNFT関数を呼び出して、NFTをMintすることができます。
@@ -130,45 +145,50 @@ contract MyEpicGame is ERC721 {
         emit CharacterNFTMinted(msg.sender, newItemId, _characterIndex);
     }
 
+    //ブロックチェーンに書き込まれる
     function attackBoss() public {
         //1.プレイヤーのNFTの状態を取得
         uint256 nftTokenIdOfPlayer = nftHolders[msg.sender];
         CharacterAttributes storage player = nftHolderAttributes[nftTokenIdOfPlayer];
-        console.log("\nPlayer w/ character %s about to attack. Has %s HP and %s AD", player.name, player.hp, player.attackDamage);
-        console.log("Boss %s has %s HP and %s AD", bigBoss.name, bigBoss.hp, bigBoss.attackDamage);
+        uint256 bossIndex = 0;
 
-        //2.プレイヤーのHPが０以上であることを確認する。
+        Beverage memory beverage = beverages[bossIndex];
+        console.log("\nPlayer w/ character %s about to attack. Has %s HP and %s AD", player.name, player.hp, player.attackDamage);
+        console.log("Boss %s has %s HP and %s AD", beverage.name, beverage.hp, beverage.attackDamage);
+
+        //2.プレイヤーのHPが０以上であることを確認する。コードを次に進めることができる
         require (
             player.hp > 0,
             "Error: Character must have HP to attack boss."
         );
-        //3.ボスのHPが０以上であることを確認スル。
+        //3.ボスのHPが０以上であることを確認する。
         require (
-            bigBoss.hp > 0,
+            beverage.hp > 0,
             "Error: boss must have HP to attack characters."
         );
 
         //4.プレイヤーがボスを攻撃できるようにする。
-        if (bigBoss.hp < player.attackDamage) {
-            bigBoss.hp = 0;
+        if (beverage.hp < player.attackDamage) {
+            beverage.hp = 0;
         } else {
-            bigBoss.hp = bigBoss.hp - player.attackDamage;
+            beverage.hp = beverage.hp - player.attackDamage;
         }
-        //5.ボスがプレうやーを攻撃できるようにする。
-        if (player.hp < bigBoss.attackDamage) {
+        //5.ボスがプレイヤーを攻撃できるようにする。
+        if (player.hp < beverage.attackDamage) {
             player.hp = 0;
         } else {
-            player.hp = player.hp - bigBoss.attackDamage;
+            player.hp = player.hp - beverage.attackDamage;
         }
 
         //プレイヤーの攻撃をターミナルに出力する。
-        console.log("Player attacked boss. New boss hp: $s", bigBoss.hp);
+        console.log("Player attacked boss. New boss hp: $s", beverage.hp);
         console.log("Boss attacked player. New Player hp: %s\n", player.hp);
 
         //ボスへの攻撃が完了したことをフロントエンドに伝えます。
-        emit AttackComplete(bigBoss.hp, player.hp);
+        emit AttackComplete(beverage.hp, player.hp);
     }
 
+     //ブロックチェーンに書き込まれない
     function checkIfUserHasNFT() public view returns (CharacterAttributes memory){
         //ユーザーのtokenIDを取得します。
         uint256 userNftTokenId = nftHolders[msg.sender];
@@ -183,16 +203,17 @@ contract MyEpicGame is ERC721 {
             return emptyStruct;
         }
     }
-    //三体のNFTキャラクターのデフォルト情報の取得
+    //三体のNFTキャラクターのデフォルト情報の取得(ブロックチェーンに書き込まれない)
     function getAllDefaultCharacters() public view returns (CharacterAttributes[] memory) {
         return defaultCharacters;
     }
 
-    //フロントエンドからボスのデータを取得する。
-    function getBigBoss() public view returns (BigBoss memory) {
-        return bigBoss;
+    //フロントエンドからボスのデータを取得する。（ブロックチェーンに書き込まれない）
+    function getBeverage(uint256 index) public view returns (Beverage[] memory) {
+        return beverages;
     }
 
+    //ブロックチェーンに書き込まれない
     function tokenURI(uint256 _tokenId) public view override returns (string memory) {
         CharacterAttributes memory charAttributes = nftHolderAttributes[_tokenId];
         //charAttributesのデータを編集して、JSONの構造に合わせた変数を格納しています。

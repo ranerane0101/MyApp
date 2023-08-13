@@ -3,7 +3,6 @@ import myEpicGame from "./utils/MyEpicGame.json";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, transformCharacterData } from "./constant";
 import React, { useEffect, useState } from 'react';
-import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
 //SelectCharacterに入っているファイルをインポートします。
 import SelectCharacter from './Components/SelectCharacter';

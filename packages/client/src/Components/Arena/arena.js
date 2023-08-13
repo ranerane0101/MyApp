@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, transformCharacterData } from "../../constant";
+import InvalidAttackMessage from "../InvalidAttackMessage/InvalidAttackMessage";
 import myEpicGame from "../../utils/MyEpicGame.json";
 import "./Arena.css";
 
@@ -13,10 +14,10 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
     const [attackState, setAttackState] = useState("");
 
     //ボスのメタデータを保存する状態変数を初期化します
-    const [boss, setBoss] = useState(null);
+    const [bosses, setBosses] = useState([]);
 
     //NFTキャラクターがボスを攻撃する際に使用する関数を定義している
-    const runAttackAction = async () => {
+    const runAttackAction = async (bossesIndex) => {
         try {
             //コントラクトが呼び出されたことを確認します
             if (gameContract) {
@@ -25,7 +26,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
                 console.log("Attacking boss...");
 
                 //NFTキャラがボスを攻撃します
-                const attackTxn = await gameContract.attackBoss();
+                const attackTxn = await gameContract.attackBoss(bossesIndex);
 
                 //トランザクションがマイニングされるまで待ちます
                 await attackTxn.wait();
@@ -36,19 +37,27 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
             }
         } catch (error) {
             console.error("Error attacking boss:", error);
-            setAttackState("");
+            setAttackState("invalid");
         }
-     };
+    };
 
     //ページがロードされると下記が実行される
     useEffect(() => {
-        //コントラクトからボスのメタデータを取得し、bossを設定する非同期関数　fetchBoss を設定する
-        const fetchBoss = async () => {
-            const bossTxn = await gameContract.getBigBoss();
-            console.log("Boss:", bossTxn);
-            //ボスの状態を設定する
-            setBoss(transformCharacterData(bossTxn));
-        };
+        // ボスのデータを取得する関数を追加します
+    const fetchBosses = async () => {
+        const boss1 = await gameContract.getBeverage(0);
+        const boss2 = await gameContract.getBeverage(1);
+
+        
+        console.log("Boss 1:", boss1);
+        console.log("Boss 2:", boss2);
+
+        // ボスの状態を設定します
+        setBosses([
+            transformCharacterData(boss1),
+            transformCharacterData(boss2)
+        ]);
+    };
 
         // AttackCompleteイベントを受信した時に起動するコールバックメソッドを追加します
         const onAttackComplete = (newBossHp, newPlayerHp) => {
@@ -59,17 +68,17 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
             console.log(`AttackComplete: Boss Hp: ${bossHp} Player Hp: ${playerHp}`);
 
             //NFTキャラとボスのHPを更新します
-            setBoss((prevState) => {
-                return { ...prevState, hp: playerHp };
+            setBosses((prevState) => {
+                return { ...prevState, hp: bossHp };
             });
             setCharacterNFT((prevState) => {
-                return {...prevState, hp: playerHp };
+                return { ...prevState, hp: playerHp };
             });
         };
 
         //コントラクトが呼び出されていたら、下記を実行します。
         if (gameContract) {
-            fetchBoss();
+            fetchBosses();
             // リスナーの設定：ボスが攻撃された通知を受け取ります
             gameContract.on("AttackComplete", onAttackComplete);
         }
@@ -100,25 +109,30 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
     return (
         <div className="arena-container">
             {/* ボスをレンダリングします */}
-            {boss && (
-                <div className="boss-container">
-                    {/* attackState を追加します */}
-                    <div className={`boss-content ${attackState}`}>
-                        <h2>🔥 {boss.name} 🔥</h2>
-                        <div className="image-content">
-                            <img src={boss.imageURI} alt={`Boss ${boss.name}`} />
-                            <div className="health-bar">
-                                <progress value={boss.hp} max={boss.maxHp} />
-                                <p>{`${boss.hp} / ${boss.maxHp} HP`}</p>
+            {bosses.length > 0 && (
+                <>
+                    {bosses.map((boss, index) => (
+                    <div className="boss-container" key={index}>
+                        {/* attackState を追加します */}
+                        <div className={`boss-content ${attackState}`}>
+                            <h2>🔥 {boss.name} 🔥</h2>
+                            <div className="image-content">
+                                <img src={boss.imageURI} alt={`Boss ${boss.name}`} />
+                                <div className="health-bar">
+                                    <progress value={boss.hp} max={boss.maxHp} />
+                                    <p>{`${boss.hp} / ${boss.maxHp} HP`}</p>
+                                </div>
                             </div>
                         </div>
+                        <div className="attack-container">
+                            <button className="cta-button" onClick={() =>runAttackAction(index)}>
+                                {`💥 Attack ${boss.name}`}
+                            </button>
+
+                        </div>
                     </div>
-                    <div className="attack-container">
-                        <button className="cta-button" onClick={runAttackAction}>
-                            {`💥 Attack ${boss.name}`}
-                        </button>
-                    </div>
-                </div>
+                    ))}
+                </>
             )}
 
             {/* NFT キャラクターをレンダリングします */}
@@ -142,9 +156,11 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
                         </div>
                     </div>
                 </div>
-                
-    )
-}
+
+            )
+            }
+
+            {attackState === "invalid" && <InvalidAttackMessage />}
         </div >
     );
 };

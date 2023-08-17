@@ -1,4 +1,4 @@
-import Arena from "./Components/Arena";
+import Arena from "./Components/Arena/arena";
 import myEpicGame from "./utils/MyEpicGame.json";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, transformCharacterData } from "./constant";

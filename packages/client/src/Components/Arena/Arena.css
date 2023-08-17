@@ -156,6 +156,21 @@
   animation: gradient-animation 4s ease infinite;
 }
 
+.boss-container .image-content img {
+  width: 250px; /* 修正: 幅を均一に設定 */
+  height: auto; /* アスペクト比を保持 */
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.bosses-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
 /* Effects */
 .boss-container .attacking {
   animation: shake 1.2s cubic-bezier(0.36, 0.07, 0.19, 0.97) both infinite;

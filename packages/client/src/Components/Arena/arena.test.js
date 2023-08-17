@@ -1,23 +1,18 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import Arena from './arena'; // テスト対象のコンポーネントをインポート
+import Arena from './arena';
 
-// モックしたgameContract.getBeverage関数を定義します
-const mockGetBeverage = jest.fn();
-const mockGameContract = {
-  getBeverage: mockGetBeverage,
-};
-
-jest.mock('./path/to/GameContract', () => {
-  return {
-    __esModule: true,
-    default: mockGameContract,
+describe('Arena', () => {
+  // localStorage をモックする
+  const localStorageMock = {
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    removeItem: jest.fn(),
+    clear: jest.fn(),
   };
-});
+  Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-describe('YourComponent', () => {
   it('fetches and sets bosses data on component load', async () => {
-    // モックのデータを設定します
     const mockBoss1 = {
       name: 'Boss 1',
       // 他のプロパティも追加
@@ -26,6 +21,9 @@ describe('YourComponent', () => {
       name: 'Boss 2',
       // 他のプロパティも追加
     };
+
+    // モックしたgameContract.getBeverage関数を定義します
+    const mockGetBeverage = jest.fn();
     mockGetBeverage
       .mockResolvedValueOnce(mockBoss1)
       .mockResolvedValueOnce(mockBoss2);

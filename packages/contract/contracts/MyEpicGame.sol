@@ -209,8 +209,11 @@ contract MyEpicGame is ERC721 {
     }
 
     //フロントエンドからボスのデータを取得する。（ブロックチェーンに書き込まれない）
-    function getBeverage(uint256 index) public view returns (Beverage[] memory) {
-        return beverages;
+    function getBeverage(uint256 index) public view returns (Beverage memory) {
+        //飲み物の数より少ないことを確認
+        require (index < beverages.length, "Error: Invalid index");
+        //指定された番号の飲み物を返却する
+        return beverages[index];
     }
 
     //ブロックチェーンに書き込まれない

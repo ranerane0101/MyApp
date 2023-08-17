@@ -15,5 +15,11 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0"
   }
 }

@@ -17,7 +17,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
     const [bosses, setBosses] = useState([]);
 
     //NFTキャラクターがボスを攻撃する際に使用する関数を定義している
-    const runAttackAction = async (bossesIndex) => {
+    const runAttackAction = async () => {
         try {
             //コントラクトが呼び出されたことを確認します
             if (gameContract) {
@@ -26,7 +26,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
                 console.log("Attacking boss...");
 
                 //NFTキャラがボスを攻撃します
-                const attackTxn = await gameContract.attackBoss(bossesIndex);
+                const attackTxn = await gameContract.attackBoss();
 
                 //トランザクションがマイニングされるまで待ちます
                 await attackTxn.wait();
@@ -110,60 +110,55 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
         <div className="arena-container">
             {/* ボスをレンダリングします */}
             <div className="bosses-container">
-            {bosses.length > 0 && (
-                <div className="bosses-list">
-                    {bosses.map((boss, index) => (
-                        <div className="boss-container" key={index}>
-                            {/* attackState を追加します */}
-                            <div className={`boss-content ${attackState}`}>
-                                <h2>🔥 {boss.name} 🔥</h2>
-                                <div className="image-content">
-                                    <img src={boss.imageURI} alt={`Boss ${boss.name}`} />
-                                    <div className="health-bar">
-                                        <progress value={boss.hp} max={boss.maxHp} />
-                                        <p>{`${boss.hp} / ${boss.maxHp} HP`}</p>
+                {bosses.length > 0 && (
+                    <div className="bosses-list">
+                        {bosses.map((boss, index) => (
+                            <div className="boss-container" key={index}>
+                                {/* attackState を追加します */}
+                                <div className={`boss-content ${attackState}`}>
+                                    <h2> {boss.name} </h2>
+                                    <div className="image-content">
+                                        <img src={boss.imageURI} alt={`Boss ${boss.name}`} />
+                                        <div className="health-bar">
+                                            <progress max={boss.maxHp} />
+                                            <p>{`${boss.maxHp} ￥`}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="attack-container">
-                                <button className="cta-button" onClick={() => runAttackAction(index)}>
-                                    {`💥 Attack ${boss.name}`}
-                                </button>
+                                <div className="attack-container">
+                                    <button className="cta-button" onClick={() => runAttackAction(index)}>
+                                        {` ${boss.name}を購入`}
+                                    </button>
 
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-
-            {/* NFT キャラクターをレンダリングします */ }
-    {
-        characterNFT && (
-            <div className="players-container">
-                <div className="player-container">
-                    <h2>Your Character</h2>
-                    <div className="image-content">
-                        <h2>{characterNFT.name}</h2>
-                        <img
-                            src={characterNFT.imageURI}
-                            alt={`Character ${characterNFT.name}`}
-                        />
-                        <div className="health-bar">
-                            <progress value={characterNFT.hp} max={characterNFT.maxHp} />
-                            <p>{`${characterNFT.hp} / ${characterNFT.maxHp} HP`}</p>
-                        </div>
+                        ))}
                     </div>
-                    <div className="stats">
-                        <h4>{`⚔️ Attack Damage: ${characterNFT.attackDamage}`}</h4>
-                    </div>
-                </div>
+                )}
             </div>
 
-        )
-    }
+            {/* NFT キャラクターをレンダリングします */}
+            {
+                characterNFT && (
+                    <div className="players-container">
+                        <div className="player-container">
 
-    { attackState === "invalid" && <InvalidAttackMessage /> }
+                            <div className="image-content">
+
+
+                                <div className="health-bar">
+                                    <progress value={characterNFT.hp} max={characterNFT.maxHp} />
+                                    <p>{`残高：${characterNFT.hp} 円`}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                )
+            }
+
+            {attackState === "invalid" && <InvalidAttackMessage />}
         </div >
     );
 };

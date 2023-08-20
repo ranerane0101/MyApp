@@ -13,8 +13,8 @@ const main = async () => {
     ],
     [500], //キャラクターのHP
     [100],//キャラクターの攻撃力
-    ["CROCODILE","COFFEE"],//Bossの名前
-    ["https://i.imgur.com/BehawOh.png","https://2.bp.blogspot.com/-PpB9nmUiJgY/WzC9bkuNo3I/AAAAAAABM4o/9IluPPFOSn0GBC-YGP_3k3c4dFsJZeLlQCLcBGAs/s800/coffee_cup_paper_sleeve.png"],//Bossの画像
+    ["いちごオレ","コーヒー"],//Bossの名前
+    ["https://3.bp.blogspot.com/-QRmjSVflVnI/WUdZD_XfNaI/AAAAAAABFCQ/lOmpyY_m4w4SeiAbvaUNsEC9RIHOG8pewCLcBGAs/s800/milk_ichigo_pack.png","https://2.bp.blogspot.com/-PpB9nmUiJgY/WzC9bkuNo3I/AAAAAAABM4o/9IluPPFOSn0GBC-YGP_3k3c4dFsJZeLlQCLcBGAs/s800/coffee_cup_paper_sleeve.png"],//Bossの画像
     [100,200],//Bossのhp
     [100,200]//Bossの攻撃力
   );

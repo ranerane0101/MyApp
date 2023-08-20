@@ -62,7 +62,7 @@ const App = () => {
     if (!currentAccount) {
       return (
         <div className="connect-wallet-container">
-          <img src="https://i.imgur.com/TXBQ4cC.png" alt="LUFFY" />
+          <img src="https://3.bp.blogspot.com/-CGjU9gYp1LY/V3o2fXLCuzI/AAAAAAAA8HE/SovGs2dke-EWICh2sX--HlBRkyMbhryAACLcB/s800/machine_jidouhanbaiki.png" alt="LUFFY" />
           <button
             className="cta-button connect-wallet-button"
             onClick={connectWalletAction}
@@ -147,8 +147,8 @@ const App = () => {
     <div className="App">
       <div className="container">
         <div className="header-container">
-          <p className="header gradient-text">⚡️ METAVERSE GAME ⚡️</p>
-          <p className="sub-text">プレイヤーと協力してボスを倒そう✨</p>
+          <p className="header gradient-text">⚡️ 自動販売機へようこそ！ ⚡️</p>
+          <p className="sub-text">✨</p>
           {/* renderContent メソッドを呼び出します。 */}
           {renderContent()}
         </div>

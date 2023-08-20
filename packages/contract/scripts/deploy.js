@@ -6,9 +6,9 @@ const main = async () => {
   const gameContractFactory = await hre.ethers.getContractFactory("MyEpicGame");
   //HardhatがローカルのEthereumネットワークを、コントラクトのためだけに作成します。
   const gameContract = await gameContractFactory.deploy(
-    ["ZORO"], //キャラクターの名前
+    ["財布"], //キャラクターの名前
     [
-      "https://i.imgur.com/TZEhCTX.png", //キャラクターの画像
+      "https://2.bp.blogspot.com/-6eX4a0aKzH0/UVTVHAV0-DI/AAAAAAAAPCc/JP2uDFtSvqk/s1600/saifu_gamaguchi.png", //キャラクターの画像
       
     ],
     [500], //キャラクターのHP
@@ -29,6 +29,8 @@ const main = async () => {
   txn = await gameContract.mintCharacterNFT(0);
 
   await txn.wait();
+
+  //攻撃対象のボスをテストの為、１番目を指定する
   txn = await gameContract.attackBoss();
   await txn.wait();
   

@@ -75,9 +75,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
                 console.log("CharacterNFT: ", characterNFT);
                 setCharacterNFT(transformCharacterData(characterNFT));
                 alert(
-                    `NFT　キャラクターがMintさsれました -- リンクはこちらです：https://gemcase.vercel.app/view/evm/sepolia/${
-                        gameContract.address
-                    }/${tokenId.toNumber()}`
+                    `NFT　がMintさsれました `
                 );
             }
         };
@@ -102,9 +100,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
     const renderCharacters = () =>
         characters.map((character, index) => (
             <div className="character-item" key={character.name}>
-                <div className="name-container">
-                    <p>{character.name}</p>
-                </div>
+                
                 <img src={character.imageURI} alt={character.name} />
                 <button
                     type="button"
@@ -115,7 +111,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
         ));
   return (
     <div className="select-character-container">
-      <h2>⏬ 一緒に戦う NFT キャラクターを選択 ⏬</h2>
+      <h2>⏬ まずは財布を用意しよう！ ⏬</h2>
       {/* キャラクターNFTがフロントエンド上で読み込めている際に、下記を表示します*/}
       {characters.length > 0 && (
         <div className="character-grid">{renderCharacters()}</div>

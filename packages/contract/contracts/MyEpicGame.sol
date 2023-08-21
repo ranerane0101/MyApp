@@ -183,14 +183,18 @@ contract MyEpicGame is ERC721 {
 
         //2.プレイヤーのHPが０以上であることを確認する。コードを次に進めることができる
         require(player.hp > 0, "Error: Character must have HP to attack boss.");
+
         //3.ボスのHPが０以上であることを確認する。
         require(
             beverage.hp > 0,
             "Error: boss must have HP to attack characters."
         );
 
-        //4.プレイヤーがボスを攻撃できるようにする。
-        if (beverage.hp < player.attackDamage) {
+        //残高が飲み物の値段を上回っているかの確認、不足していたら買えなくする。
+        require (player.hp > beverage.hp, "Error: You must have money to buy beverages.");
+
+        //4.プレイヤーがボスを攻撃できるようにする。プレイヤーの攻撃力がボスのHPを貫通したら、ボスのHPを0にする
+        if (beverage.hp < player.hp) {
             beverage.hp = 0;
         } else {
             beverage.hp = beverage.hp - player.attackDamage;

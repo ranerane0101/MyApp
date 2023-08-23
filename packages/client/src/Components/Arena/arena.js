@@ -17,7 +17,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
     const [bosses, setBosses] = useState([]);
 
     //NFTキャラクターがボスを攻撃する際に使用する関数を定義している
-    const runAttackAction = async () => {
+    const runAttackAction = async (bossIndex) => {
         try {
             //コントラクトが呼び出されたことを確認します
             if (gameContract) {
@@ -26,7 +26,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
                 console.log("Attacking boss...");
 
                 //NFTキャラがボスを攻撃します
-                const attackTxn = await gameContract.attackBoss();
+                const attackTxn = await gameContract.attackBoss(bossIndex);
 
                 //トランザクションがマイニングされるまで待ちます
                 await attackTxn.wait();
@@ -61,6 +61,9 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
 
         // AttackCompleteイベントを受信した時に起動するコールバックメソッドを追加します
         const onAttackComplete = (newBossHp, newPlayerHp) => {
+
+            setAttackState("idle");
+            
             //ボスの新しいHPを取得します
             const bossHp = newBossHp.toNumber();
             //NFTキャラの新しいHPを取得する

@@ -24,17 +24,7 @@ const main = async () => {
 
   console.log("Contract deployed to:", nftGame.address);
 
-  let txn;
-
-  txn = await gameContract.mintCharacterNFT(0);
-
-  await txn.wait();
-
-  //攻撃対象のボスをテストの為、１番目を指定する
-  txn = await gameContract.attackBoss();
-  await txn.wait();
   
-  console.log('First attack.');
 };
 
 const runMain = async () => {

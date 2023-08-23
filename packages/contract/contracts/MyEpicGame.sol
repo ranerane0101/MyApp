@@ -159,23 +159,23 @@ contract MyEpicGame is ERC721 {
     }
 
     //ブロックチェーンに書き込まれる
-    function attackBoss() public {
+    function attackBoss(uint256 bossIndex) public {
         //1.プレイヤーのNFTの状態を取得
         uint256 nftTokenIdOfPlayer = nftHolders[msg.sender];
         CharacterAttributes storage player = nftHolderAttributes[
             nftTokenIdOfPlayer
         ];
 
-        uint256 bossIndex = 0;
+        
         Beverage memory beverage = beverages[bossIndex];
         console.log(
-            "\nPlayer w/ character %s about to attack. Has %s HP and %s AD",
+            "\nPlayer w/ character %s about to buy beverage. Has %s Money and %s AD",
             player.name,
             player.hp,
             player.attackDamage
         );
         console.log(
-            "Boss %s has %s HP and %s AD",
+            "Boss %s has %s HP and %s Money requires",
             beverage.name,
             beverage.hp,
             beverage.attackDamage

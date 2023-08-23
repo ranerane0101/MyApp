@@ -30,11 +30,35 @@ const main = async () => {
 
   await txn.wait();
 
-  //攻撃対象のボスをテストの為、１番目を指定する
+  //1回目の購入
   txn = await gameContract.attackBoss();
   await txn.wait();
   
-  console.log('First attack.');
+  console.log('First purchase.');
+
+  //2回目の購入
+  txn = await gameContract.attackBoss();
+  await txn.wait();
+
+  console.log('Second purchase. ');
+
+  //3回目の購入
+  txn = await gameContract.attackBoss();
+  await txn.wait();
+
+  console.log('Third purchase. ');
+
+  //4回目の購入
+  txn = await gameContract.attackBoss();
+  await txn.wait();
+
+  console.log('forth purchase. ');
+
+  //5回目の購入
+  txn = await gameContract.attackBoss();
+  await txn.wait();
+
+  console.log('fifth purchase. ');
 };
 
 const runMain = async () => {
